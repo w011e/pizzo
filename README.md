@@ -35,10 +35,31 @@ gpio_setup.py: Sets up and initializes all GPIO pins for the project.
 ```bash
 # You’ll need some essential tools for development and interacting with the hardware
 sudo apt install -y python3 python3-pip git i2c-tools
+sudo apt-get install -y libjpeg-dev zlib1g-dev
+# create env and install dependencies 
+python3 -m venv ~/pizzo
+source ~/pizzo/bin/activate
+pip install Adafruit-Blinka
+pip install adafruit-circuitpython-ssd1306
+pip install adafruit-circuitpython-display-text
+deactivate
 ```
 
-### Airplay
+## Enable I2C on raspi for display
+```bash
+sudo raspi-config
+```
+Navigate to Interface Options.
+Select I2C and enable it.
+Exit raspi-config and reboot.
 
+To run at boot time
+```bash
+nano /etc/rc.local
+```
+Add `python3 /root/OLED.py ` to script. 
+
+### Airplay
 ```bash
 # install dependencies
 sudo apt install -y shairport-sync

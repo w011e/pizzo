@@ -1,0 +1,7 @@
+bin 
+lib
+logs
+include
+config
+src/__pycache__/
+pyvenv.cfg

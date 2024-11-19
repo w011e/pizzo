@@ -1,23 +1,46 @@
-import board
-import busio
-from adafruit_ssd1306 import SSD1306_I2C
+from datetime import datetime
+import time, board, busio
+import adafruit_ssd1306
 from PIL import Image, ImageDraw, ImageFont
 
+# Setup the display
+WIDTH = 128
+HEIGHT = 32  
+BORDER = 5
 i2c = busio.I2C(board.SCL, board.SDA)
-display = SSD1306_I2C(128, 32, i2c)  # Adjust dimensions if needed
+oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c)
 
-def clear_display():
-    display.fill(0)
-    display.show()
+# Clear the display
+oled.fill(0)
+oled.show()
+
+# Create a blank image for drawing
+image = Image.new("1", (WIDTH, HEIGHT))
+
+# Get drawing object to draw on the image
+draw = ImageDraw.Draw(image)
+
+# Load a default font
+font = ImageFont.load_default()
+
+# Load a TrueType font and specify the size
+font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" 
+font_size = 33
+font = ImageFont.truetype(font_path, font_size)
 
 def show_message(message):
-    clear_display()
-    image = Image.new("1", (display.width, display.height))
-    draw = ImageDraw.Draw(image)
-    font = ImageFont.load_default()
-    draw.text((0, 0), message, font=font, fill=255)
-    display.image(image)
-    display.show()
+    draw.rectangle((0, 0, WIDTH, HEIGHT), outline=0, fill=0)
+    draw.text((11, 1), message, font=font, fill=255)
+    oled.image(image)
+    oled.show()
+    time.sleep(15)  
+    oled.fill(0)  
+    oled.show()
 
-if __name__ == "__main__":
-    show_message("Hello, Pi Zero!")
+def print_time():
+    now = datetime.now()
+    current_time = now.strftime("%H:%M")
+    show_message(current_time)
+
+def show_alarm_time():
+    print("Alarm: 06:00")
